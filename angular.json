@@ -15,11 +15,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/events-app",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -60,6 +60,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "forceEsbuild": true,
           "configurations": {
             "production": {
               "buildTarget": "events-app:build:production"
