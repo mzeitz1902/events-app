@@ -1,0 +1,11 @@
+@use '@angular/material' as mat;
+
+.events-container {
+  @apply flex flex-col gap-3
+}
+
+@include mat.form-field-density(-4);
+
+
+
+
