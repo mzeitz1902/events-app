@@ -1,24 +1,28 @@
-import {createFeature, createReducer} from '@ngrx/store';
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {User} from "../user.interface";
+import {createFeature, createReducer, createSelector, on} from '@ngrx/store';
+import {loginSuccess} from "./auth.actions";
+import {UserInfo} from '@angular/fire/auth';
 
-export const authsFeatureKey = 'auths';
+export const authFeatureKey = 'auths';
 
-export interface State extends EntityState<User> {
+export interface State {
+  currentUser: UserInfo | null
 }
 
-export const adapter: EntityAdapter<User> = createEntityAdapter<User>();
-
-export const initialState: State = adapter.getInitialState({});
+export const initialState: State = {
+  currentUser: null
+}
 
 export const reducer = createReducer(
   initialState,
+  on(loginSuccess, (state, {user}) => ({...state, currentUser: user}))
 );
 
 export const authFeature = createFeature({
-  name: authsFeatureKey,
+  name: authFeatureKey,
   reducer,
   extraSelectors: ({selectAuthsState}) => ({
-    ...adapter.getSelectors(selectAuthsState)
-  }),
+    selectCurrentUser: createSelector(selectAuthsState, state => state.currentUser)
+  })
 });
+
+export const selectCurrentUser = authFeature.selectCurrentUser;
