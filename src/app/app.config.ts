@@ -34,6 +34,5 @@ export const appConfig: ApplicationConfig = {
     provideFirestore(() => getFirestore()),
     provideStoreDevtools(),
     importProvidersFrom(BrowserAnimationsModule),
-    // {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline', floatLabel: 'always'}}
   ]
 };
