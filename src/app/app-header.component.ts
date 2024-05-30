@@ -19,7 +19,7 @@ import {RouterLink} from "@angular/router";
     RouterLink
   ],
   template: `
-    <mat-toolbar class="flex justify-between !p-8">
+    <mat-toolbar class="flex justify-between !p-8 sticky top-0 z-10">
       <mat-form-field class="mt-4 !text-sm">
         <p class="flex items-center gap-2">
           <mat-icon matPrefix class="!text-md">search</mat-icon>

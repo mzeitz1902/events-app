@@ -4,8 +4,12 @@
   @apply flex flex-col gap-3
 }
 
-@include mat.form-field-density(-4);
+p {
+  @apply text-sm
+}
 
+@include mat.form-field-density(-4);
+@include mat.icon-button-density(-5)
 
 
 

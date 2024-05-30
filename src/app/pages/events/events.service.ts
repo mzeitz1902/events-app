@@ -1,18 +1,17 @@
 import {computed, inject, Injectable} from '@angular/core';
-import {FirebaseService, MusicEvent} from "../../services/firebase.service";
-import {toSignal} from "@angular/core/rxjs-interop";
+import {MusicEvent} from "../../services/firestore.service";
+import {Store} from "@ngrx/store";
+import {selectIsLoading, selectMusicEvents} from "./store/music-events.feature";
+import {loadMusicEvents} from "./store/music-events.actions";
+import {addToCart} from "../shopping-cart/store/shopping-cart.actions";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class EventsService {
-  private firebaseService = inject(FirebaseService)
+  private readonly store: Store = inject(Store)
 
-  private events = toSignal<MusicEvent[]>(this.firebaseService.getEvents$())
+  private events = this.store.selectSignal(selectMusicEvents)
 
-  dates = computed(() => {
-    return this.events()?.map(event => event.startDatetime.toDate().toString())
-  })
-
-  /**Returns events grouped by date */
+  /** Returns events grouped by date */
   musicEvents = computed(() => {
     const events = this.events()
     const groupedEvents = new Map<string, MusicEvent[]>()
@@ -24,6 +23,19 @@ export class EventsService {
     }
     return groupedEvents
   })
+  dates = computed(() => Array.from(this.musicEvents().keys()))
 
+  isLoading = this.store.selectSignal(selectIsLoading)
 
+  constructor() {
+    this.loadEvents()
+  }
+
+  loadEvents() {
+    this.store.dispatch(loadMusicEvents())
+  }
+
+  addEventToCart(id: string) {
+    this.store.dispatch(addToCart({id}))
+  }
 }

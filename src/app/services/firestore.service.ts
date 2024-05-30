@@ -1,13 +1,16 @@
-import {collection, collectionData, docData, DocumentReference, Firestore, Timestamp} from '@angular/fire/firestore';
-import {forkJoin, map, Observable, switchMap, take} from 'rxjs';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  docData,
+  DocumentReference,
+  Firestore,
+  Timestamp
+} from '@angular/fire/firestore';
+import {forkJoin, from, map, Observable, switchMap, take} from 'rxjs';
 import {inject, Injectable} from '@angular/core';
 
-type Pick = {
-  id: string
-  blurb: string
-}
-
-export type Venue = {
+export interface Venue {
   id: string
   name: string
   contentUrl: string
@@ -15,7 +18,7 @@ export type Venue = {
   direction?: string
 }
 
-type Artist = {
+interface Artist {
   id: string
   name: string
 }
@@ -26,10 +29,9 @@ export interface MusicEvent {
   flyerFront: string
   attending: number
   startDatetime: Timestamp
-  endDatetime: string
+  endDatetime: Timestamp
   contentUrl: string
   venue: Venue | DocumentReference
-  pick: Pick
   artists: Artist[] | DocumentReference[]
   city: string
   country: string
@@ -39,7 +41,7 @@ export interface MusicEvent {
 @Injectable({
   providedIn: 'root'
 })
-export class FirebaseService {
+export class FirestoreService {
   firestore = inject(Firestore);
   eventsCollection = collection(this.firestore, 'music-events');
 
@@ -67,6 +69,12 @@ export class FirebaseService {
         )
       )
     )
+  }
+
+  addEventToCart(eventId: string) {
+    // todo works but duplicates are not prevented
+    return from(addDoc(collection(this.firestore, 'shopping-cart'), {eventId}))
+
   }
 
   /**

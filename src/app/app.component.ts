@@ -16,10 +16,4 @@ import {AppHeaderComponent} from "./app-header.component";
 })
 export class AppComponent {
 
-  // async ngOnInit() {
-  //   const events = await this.service.getEvents()
-  //   debugger
-  //   console.log(events)
-  // }
-
 }
