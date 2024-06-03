@@ -1,4 +1,4 @@
-import {ApplicationConfig, importProvidersFrom} from '@angular/core';
+import {ApplicationConfig, importProvidersFrom, provideExperimentalZonelessChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -17,9 +17,11 @@ import {MusicEventsEffects} from "./pages/events/store/music-events.effects";
 import {ShoppingCartEffects} from "./pages/shopping-cart/store/shopping-cart.effects";
 import {AuthEffects} from "./pages/auth/store/auth.effects";
 import {authFeature} from "./pages/auth/store/auth.feature";
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
@@ -34,5 +36,6 @@ export const appConfig: ApplicationConfig = {
     provideFirestore(() => getFirestore()),
     provideStoreDevtools(),
     importProvidersFrom(BrowserAnimationsModule),
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
   ]
 };

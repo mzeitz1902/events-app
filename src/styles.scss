@@ -1,6 +1,26 @@
+@use '@angular/material' as mat;
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import 'm3-theme.scss';
 
-/* You can add global styles to this file, and also import other style files */
+@include mat.core();
+
+$angular-material-3-theme: mat.define-theme(
+    (
+      color: (
+        theme-type: dark,
+        primary: mat.$blue-palette,
+        tertiary: mat.$azure-palette,
+      ),
+      density: (
+        scale: -3,
+      ),
+    )
+);
+
+:root {
+  @include mat.all-component-themes($angular-material-3-theme);
+}
+

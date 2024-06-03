@@ -1,28 +1,29 @@
 import {createFeature, createReducer, createSelector, on} from '@ngrx/store';
-import {loginSuccess} from "./auth.actions";
-import {UserInfo} from '@angular/fire/auth';
+import {loginOrSignupFail, resetError} from "./auth.actions";
+import {AuthErrorCode} from "@firebase/auth/dist/esm5/src/core/errors";
 
 export const authFeatureKey = 'auths';
 
 export interface State {
-  currentUser: UserInfo | null
+  error: AuthErrorCode | null
 }
 
 export const initialState: State = {
-  currentUser: null
+  error: null
 }
 
 export const reducer = createReducer(
   initialState,
-  on(loginSuccess, (state, {user}) => ({...state, currentUser: user}))
+  on(loginOrSignupFail, (state, action) => ({...state, currentUser: null, error: action.error})),
+  on(resetError, (state) => ({...state, error: null}))
 );
 
 export const authFeature = createFeature({
   name: authFeatureKey,
   reducer,
   extraSelectors: ({selectAuthsState}) => ({
-    selectCurrentUser: createSelector(selectAuthsState, state => state.currentUser)
+    selectError: createSelector(selectAuthsState, state => state.error?.replace(/auth\//, '')),
   })
 });
 
-export const selectCurrentUser = authFeature.selectCurrentUser;
+export const selectError = authFeature.selectError;

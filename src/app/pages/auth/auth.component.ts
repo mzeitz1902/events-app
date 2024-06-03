@@ -1,13 +1,10 @@
-import {Component, inject, signal} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Component, effect, inject, signal} from '@angular/core';
+import {AbstractControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {AsyncPipe} from "@angular/common";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
-import {Observable} from "rxjs";
-import {Store} from "@ngrx/store";
-import {login, register, resetError} from "./store/auth.actions";
-import {AuthService} from "../../services/auth.service";
+import {AuthCompService} from "./auth-comp.service";
 
 
 @Component({
@@ -22,98 +19,95 @@ import {AuthService} from "../../services/auth.service";
     MatButton,
     MatLabel,
   ],
+  providers: [AuthCompService],
   template: `
     <div class="flex flex-col items-center gap-5 p-2">
       <h1 class="font-bold text-2xl">Welcome to Events App</h1>
-      <form [formGroup]="form" (ngSubmit)="onSubmit(form)" class="flex flex-col max-w-fit">
-        <mat-form-field appearance="outline">
-          <mat-label>E-Mail</mat-label>
-          <input
-            matInput
-            formControlName="email"
-          >
-          @if (form.controls['email'].errors) {
-            <mat-error>{{ getErrorMail(form) }}</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>Password</mat-label>
-          <input
-            matInput
-            type="password"
-            formControlName="password"
-          >
-          @if (form.controls['password'].errors) {
-            <mat-error>{{ getErrorPassword(form) }}</mat-error>
-          }
-        </mat-form-field>
-
-        @if (mode() === 'Register') {
-          <mat-form-field>
-            <mat-label>Name</mat-label>
+      @if (form) {
+        <form [formGroup]="form" (ngSubmit)="onSubmit(form)" class="flex flex-col max-w-fit">
+          <mat-form-field [class.mb-3]="form.get('email')?.invalid">
+            <mat-label>Email</mat-label>
             <input
               matInput
-              type="text"
-              formControlName="username"
+              formControlName="email"
             >
-            @if (form.controls['username'].errors) {
-              <mat-error>{{ getErrorName(form) }}</mat-error>
+            @if (emailError()) {
+              <mat-error>{{ emailError() }}</mat-error>
             }
           </mat-form-field>
-        }
 
-        @if (errorState$ | async) {
-          <mat-error class="error">{{ error$ | async }}</mat-error>
-        }
+          <mat-form-field [class.mb-5]="form.get('password')?.invalid">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              type="password"
+              formControlName="password"
+            >
+            @if (form.controls['password'].errors) {
+              <mat-error>{{ getErrorPassword(form) }}</mat-error>
+            }
+          </mat-form-field>
 
-        <div class="flex gap-3 items-center justify-center">
-          <button
-            mat-raised-button
-            color="accent"
-            (click)="onSubmit(form)"
-          >
-            {{ mode() === 'Login' ? 'Login' : 'Register' }}
-          </button>
-        </div>
-      </form>
+          @if (mode() === 'Signup') {
+            <mat-form-field>
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="username"
+              >
+              @if (form.controls['username'].errors) {
+                <mat-error>{{ getErrorName(form) }}</mat-error>
+              }
+            </mat-form-field>
+          }
 
+          <div class="flex flex-col gap-3 items-center justify-center">
+            @if (authError()) {
+              <mat-error>{{ authError() }}</mat-error>
+            }
+            <button
+              mat-stroked-button
+              color="primary"
+              [disabled]="this.mode() === 'Signup' || form.invalid"
+            >
+              Log In
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="mode.set('Signup')"
+              [disabled]="this.mode() === 'Signup' && !this.form?.valid"
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+      }
+      {{ emailError() }}
     </div>
 
   `
 })
 export class AuthComponent {
-  private readonly service = inject(AuthService)
-  mode = signal<'Login' | 'Register'>('Login')
-  form: FormGroup<UserForm> = new FormGroup<UserForm>({} as UserForm);
-  error$: Observable<Error | undefined> = new Observable<Error | undefined>();
-  errorState$: Observable<boolean> = new Observable<boolean>();
-  signedUp$: Observable<boolean> = new Observable<boolean>();
+  mode = signal<'Login' | 'Signup'>('Login')
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private store: Store
-  ) {
+  private readonly service = inject(AuthCompService)
+  authError = this.service.authError
+  emailError = this.service.emailError
+  form: FormGroup<UserForm> | undefined
+
+  constructor() {
     this.initForm()
-    // this.error$ = this.store.select(selectError);
-    // this.errorState$ = this.store.select(selectErrorState);
-    // this.signedUp$ = this.store.select(selectSignedUp);
+    effect(() => {
+      if (this.mode() === 'Signup') {
+        this.service.resetError()
+      }
+    });
   }
 
   initForm() {
-    const formObject = {
-      email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.minLength(6)]],
-      username: [null, this.mode() === 'Register' ? null : Validators.required],
-    }
-    this.form = this.formBuilder.group<UserForm>(formObject as unknown as UserForm);
-  }
-
-  getErrorMail(form: FormGroup) {
-    if (form.controls['email'].hasError('required')) {
-      return 'You must enter a value';
-    }
-    return form.controls['email'].hasError('email') ? 'Not a valid email' : '';
+    this.form = this.service.initForm(this.mode() === 'Login')
   }
 
   getErrorName(form: FormGroup) {
@@ -133,21 +127,9 @@ export class AuthComponent {
     return;
   }
 
-  switchLoginMode(form: FormGroup) {
-    this.store.dispatch(resetError());
-  }
-
   onSubmit(form: FormGroup) {
-    const user = form.value
-    const action = this.mode() === 'Login' ? login : register
-    this.store.dispatch(action({user}));
+    this.service.onSubmit(form.value, this.mode() === 'Login')
   }
-}
-
-enum Error {
-  WRONG_PASSWORD = "Wrong Password",
-  EMAIL_EXISTS = "E-Mail already exists",
-  EMAIL_NOT_FOUND = "E-Mail not found"
 }
 
 export interface UserForm {
@@ -156,8 +138,3 @@ export interface UserForm {
   username: AbstractControl<string>;
 }
 
-export interface UserCredentials {
-  email: string;
-  password: string;
-  username: string;
-}

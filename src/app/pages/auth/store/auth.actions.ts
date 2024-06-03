@@ -1,25 +1,25 @@
 import {createActionGroup, emptyProps, props} from '@ngrx/store';
-import {UserInfo} from '@angular/fire/auth';
-import {UserCredentials} from "../auth.component";
+import {AuthErrorCode} from "@firebase/auth/dist/esm5/src/core/errors";
+import {UserCredentials} from "../../../shared/user-credentials.interface.";
 
 
 const AuthActions = createActionGroup({
   source: 'Auth',
   events: {
     login: props<{ user: UserCredentials }>(),
-    loginSuccess: props<{ user: UserInfo }>(),
-    loginOrSignupFail: props<{ error: string }>(),
-    register: props<{ user: UserCredentials }>(),
-    registerSuccess: emptyProps(),
+    loginSuccess: emptyProps(),
+    loginOrSignupFail: props<{ error: AuthErrorCode }>(),
+    signUp: props<{ user: UserCredentials }>(),
+    signUpSuccess: emptyProps(),
     resetError: emptyProps(),
     logout: emptyProps()
   }
 });
 
-export const login = AuthActions.login;
-export const loginSuccess = AuthActions.loginSuccess;
+export const logIn = AuthActions.login;
+export const logInSuccess = AuthActions.loginSuccess;
 export const loginOrSignupFail = AuthActions.loginOrSignupFail;
-export const register = AuthActions.register;
-export const registerSuccess = AuthActions.registerSuccess;
+export const signUp = AuthActions.signUp;
+export const signUpSuccess = AuthActions.signUpSuccess;
 export const resetError = AuthActions.resetError;
 export const logout = AuthActions.logout;

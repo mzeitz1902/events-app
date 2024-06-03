@@ -32,7 +32,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/globals.scss"
+              "src/globals.scss",
+              "src/m3-theme.scss"
             ],
             "scripts": [],
             "browser": "src/main.ts"
@@ -63,7 +64,6 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "forceEsbuild": true,
           "configurations": {
             "production": {
               "buildTarget": "events-app:build:production"
@@ -95,7 +95,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/globals.scss"
+              "src/globals.scss",
+              "src/m3-theme.scss"
             ],
             "scripts": []
           }
