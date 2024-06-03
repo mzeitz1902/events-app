@@ -10,10 +10,7 @@ describe('MusicEventsEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        MusicEventsEffects,
-        provideMockActions(() => actions$)
-      ]
+      providers: [MusicEventsEffects, provideMockActions(() => actions$)],
     });
 
     effects = TestBed.inject(MusicEventsEffects);

@@ -5,41 +5,41 @@ import {
   docData,
   DocumentReference,
   Firestore,
-  Timestamp
+  Timestamp,
 } from '@angular/fire/firestore';
-import {forkJoin, from, map, Observable, switchMap, take} from 'rxjs';
-import {inject, Injectable} from '@angular/core';
+import { forkJoin, from, map, Observable, switchMap, take } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
 
 export interface Venue {
-  id: string
-  name: string
-  contentUrl: string
-  live: boolean
-  direction?: string
+  id: string;
+  name: string;
+  contentUrl: string;
+  live: boolean;
+  direction?: string;
 }
 
 interface Artist {
-  id: string
-  name: string
+  id: string;
+  name: string;
 }
 
 export interface MusicEvent {
-  id: string
-  title: string
-  flyerFront: string
-  attending: number
-  startDatetime: Timestamp
-  endDatetime: Timestamp
-  contentUrl: string
-  venue: Venue | DocumentReference
-  artists: Artist[] | DocumentReference[]
-  city: string
-  country: string
-  private: boolean
+  id: string;
+  title: string;
+  flyerFront: string;
+  attending: number;
+  startDatetime: Timestamp;
+  endDatetime: Timestamp;
+  contentUrl: string;
+  venue: Venue | DocumentReference;
+  artists: Artist[] | DocumentReference[];
+  city: string;
+  country: string;
+  private: boolean;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FirestoreService {
   firestore = inject(Firestore);
@@ -55,26 +55,30 @@ export class FirestoreService {
    *
    */
   getEvents$(): Observable<MusicEvent[]> {
-    return collectionData(this.eventsCollection, {idField: 'id'}).pipe(
-      switchMap(events =>
+    return collectionData(this.eventsCollection, { idField: 'id' }).pipe(
+      switchMap((events) =>
         forkJoin(
-          events.map(event =>
+          events.map((event) =>
             forkJoin({
               artists: this.getArtists$(event as MusicEvent),
-              venue: this.getVenue$(event as MusicEvent)
+              venue: this.getVenue$(event as MusicEvent),
             }).pipe(
-              map(({artists, venue}) => ({...event, artists, venue} as MusicEvent))
-            )
-          )
-        )
-      )
-    )
+              map(
+                ({ artists, venue }) =>
+                  ({ ...event, artists, venue }) as MusicEvent,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   addEventToCart(eventId: string) {
     // todo works but duplicates are not prevented
-    return from(addDoc(collection(this.firestore, 'shopping-cart'), {eventId}))
-
+    return from(
+      addDoc(collection(this.firestore, 'shopping-cart'), { eventId }),
+    );
   }
 
   /**
@@ -87,19 +91,19 @@ export class FirestoreService {
    */
   private getArtists$(event: MusicEvent) {
     return forkJoin(
-      event.artists.map(artistRef =>
+      event.artists.map((artistRef) =>
         docData(artistRef as DocumentReference).pipe(
           take(1),
-          map(artist => artist as Artist)
-        )
-      )
+          map((artist) => artist as Artist),
+        ),
+      ),
     );
   }
 
   private getVenue$(event: MusicEvent) {
     return docData(event.venue as DocumentReference).pipe(
       take(1),
-      map(venue => venue as Venue)
-    )
+      map((venue) => venue as Venue),
+    );
   }
 }

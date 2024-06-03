@@ -10,7 +10,9 @@
     "cypress:open": "cypress open",
     "cypress:open:component": "cypress open --component --config-file cypress.config.no-coverage.ts",
     "cypress:run": "cypress run --browser chrome",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "prettier:check": "npx prettier --check ./src/app/**/*.{html,ts,css,scss,json}",
+    "prettier:fix": "npm run prettier:check -- --write"
   },
   "private": true,
   "dependencies": {

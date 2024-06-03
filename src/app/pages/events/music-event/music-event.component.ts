@@ -1,5 +1,5 @@
-import {Component, computed, inject, input} from '@angular/core';
-import {MusicEvent, Venue} from "../../../services/firestore.service";
+import { Component, computed, inject, input } from '@angular/core';
+import { MusicEvent, Venue } from '../../../services/firestore.service';
 import {
   MatCard,
   MatCardActions,
@@ -7,15 +7,15 @@ import {
   MatCardHeader,
   MatCardSubtitle,
   MatCardTitle,
-  MatCardXlImage
-} from "@angular/material/card";
-import {MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {VenueComponent} from "./venue.component";
-import {EventDateComponent} from "./event-date.component";
-import {MatSuffix} from "@angular/material/form-field";
-import {MatTooltip} from "@angular/material/tooltip";
-import {EventsService} from "../events.service";
+  MatCardXlImage,
+} from '@angular/material/card';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { VenueComponent } from './venue.component';
+import { EventDateComponent } from './event-date.component';
+import { MatSuffix } from '@angular/material/form-field';
+import { MatTooltip } from '@angular/material/tooltip';
+import { EventsService } from '../events.service';
 
 @Component({
   selector: 'app-music-event',
@@ -33,17 +33,22 @@ import {EventsService} from "../events.service";
     EventDateComponent,
     MatCardActions,
     MatSuffix,
-    MatTooltip
+    MatTooltip,
   ],
   template: `
     <mat-card class="max-w-sm flex flex-col gap-2">
       <mat-card-header>
-        <mat-card-title class="!font-bold !text-black">{{ event().title }}</mat-card-title>
+        <mat-card-title class="!font-bold !text-black">{{
+          event().title
+        }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <img mat-card-xl-image [src]="event().flyerFront" alt="flyer">
-        <app-venue [venue]="venue()"/>
-        <app-event-date [startDateTime]="event().startDatetime" [endDateTime]="event().endDatetime"/>
+        <img mat-card-xl-image [src]="event().flyerFront" alt="flyer" />
+        <app-venue [venue]="venue()" />
+        <app-event-date
+          [startDateTime]="event().startDatetime"
+          [endDateTime]="event().endDatetime"
+        />
         <mat-card-actions class="flex justify-end">
           <button mat-icon-button matTooltip="Add to cart" (click)="onClick()">
             <mat-icon color="primary">add_circle</mat-icon>
@@ -51,15 +56,15 @@ import {EventsService} from "../events.service";
         </mat-card-actions>
       </mat-card-content>
     </mat-card>
-  `
+  `,
 })
 export class MusicEventComponent {
-  event = input.required<MusicEvent>()
-  venue = computed<Venue>(() => this.event().venue as Venue)
+  event = input.required<MusicEvent>();
+  venue = computed<Venue>(() => this.event().venue as Venue);
 
-  service = inject(EventsService)
+  service = inject(EventsService);
 
   onClick() {
-    this.service.addEventToCart(this.event().id)
+    this.service.addEventToCart(this.event().id);
   }
 }

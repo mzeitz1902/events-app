@@ -10,10 +10,7 @@ describe('ShoppingCartEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        ShoppingCartEffects,
-        provideMockActions(() => actions$)
-      ]
+      providers: [ShoppingCartEffects, provideMockActions(() => actions$)],
     });
 
     effects = TestBed.inject(ShoppingCartEffects);

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MountConfig } from 'cypress/angular';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe(``, () => {
   let config: MountConfig<WrapperComponent>;

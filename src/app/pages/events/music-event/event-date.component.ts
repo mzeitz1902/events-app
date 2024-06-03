@@ -1,13 +1,11 @@
-import {Component, input} from '@angular/core';
-import {Timestamp} from "@angular/fire/firestore";
-import {DatePipe} from "@angular/common";
+import { Component, input } from '@angular/core';
+import { Timestamp } from '@angular/fire/firestore';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-event-date',
   standalone: true,
-  imports: [
-    DatePipe
-  ],
+  imports: [DatePipe],
   template: `
     <div class="flex flex-col">
       <div class="flex gap-1">
@@ -23,7 +21,7 @@ import {DatePipe} from "@angular/common";
   `,
 })
 export class EventDateComponent {
-  startDateTime = input.required<Timestamp>()
-  endDateTime = input.required<Timestamp>()
-  format = 'dd.MM.yyyy, HH:mm'
+  startDateTime = input.required<Timestamp>();
+  endDateTime = input.required<Timestamp>();
+  format = 'dd.MM.yyyy, HH:mm';
 }

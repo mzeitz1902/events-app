@@ -1,4 +1,4 @@
-import {initialState, reducer} from './music-events.feature';
+import { initialState, reducer } from './music-events.feature';
 
 describe('MusicEvents Reducer', () => {
   describe('unknown action', () => {

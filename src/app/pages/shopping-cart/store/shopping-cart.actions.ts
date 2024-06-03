@@ -1,4 +1,4 @@
-import {createActionGroup, props} from '@ngrx/store';
+import { createActionGroup, props } from '@ngrx/store';
 
 const ShoppingCartActions = createActionGroup({
   source: 'Shopping Cart',

@@ -1,7 +1,6 @@
-import {createActionGroup, emptyProps, props} from '@ngrx/store';
-import {AuthErrorCode} from "@firebase/auth/dist/esm5/src/core/errors";
-import {UserCredentials} from "../../../shared/user-credentials.interface.";
-
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { AuthErrorCode } from '@firebase/auth/dist/esm5/src/core/errors';
+import { UserCredentials } from '../../../shared/user-credentials.interface.';
 
 const AuthActions = createActionGroup({
   source: 'Auth',
@@ -12,8 +11,8 @@ const AuthActions = createActionGroup({
     signUp: props<{ user: UserCredentials }>(),
     signUpSuccess: emptyProps(),
     resetError: emptyProps(),
-    logout: emptyProps()
-  }
+    logout: emptyProps(),
+  },
 });
 
 export const logIn = AuthActions.login;

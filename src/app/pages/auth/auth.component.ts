@@ -1,11 +1,14 @@
-import {Component, effect, inject, signal} from '@angular/core';
-import {AbstractControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {AsyncPipe} from "@angular/common";
-import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {MatButton} from "@angular/material/button";
-import {AuthCompService} from "./auth-comp.service";
-
+import { Component, effect, inject, signal } from '@angular/core';
+import {
+  AbstractControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { AuthCompService } from './auth-comp.service';
 
 @Component({
   selector: 'app-auth-component',
@@ -24,13 +27,14 @@ import {AuthCompService} from "./auth-comp.service";
     <div class="flex flex-col items-center gap-5 p-2">
       <h1 class="font-bold text-2xl">Welcome to Events App</h1>
       @if (form) {
-        <form [formGroup]="form" (ngSubmit)="onSubmit(form)" class="flex flex-col max-w-fit">
+        <form
+          [formGroup]="form"
+          (ngSubmit)="onSubmit(form)"
+          class="flex flex-col max-w-fit"
+        >
           <mat-form-field [class.mb-3]="form.get('email')?.invalid">
             <mat-label>Email</mat-label>
-            <input
-              matInput
-              formControlName="email"
-            >
+            <input matInput formControlName="email" />
             @if (emailError()) {
               <mat-error>{{ emailError() }}</mat-error>
             }
@@ -38,11 +42,7 @@ import {AuthCompService} from "./auth-comp.service";
 
           <mat-form-field [class.mb-5]="form.get('password')?.invalid">
             <mat-label>Password</mat-label>
-            <input
-              matInput
-              type="password"
-              formControlName="password"
-            >
+            <input matInput type="password" formControlName="password" />
             @if (form.controls['password'].errors) {
               <mat-error>{{ getErrorPassword(form) }}</mat-error>
             }
@@ -51,11 +51,7 @@ import {AuthCompService} from "./auth-comp.service";
           @if (mode() === 'Signup') {
             <mat-form-field>
               <mat-label>Name</mat-label>
-              <input
-                matInput
-                type="text"
-                formControlName="username"
-              >
+              <input matInput type="text" formControlName="username" />
               @if (form.controls['username'].errors) {
                 <mat-error>{{ getErrorName(form) }}</mat-error>
               }
@@ -86,28 +82,27 @@ import {AuthCompService} from "./auth-comp.service";
       }
       {{ emailError() }}
     </div>
-
-  `
+  `,
 })
 export class AuthComponent {
-  mode = signal<'Login' | 'Signup'>('Login')
+  mode = signal<'Login' | 'Signup'>('Login');
 
-  private readonly service = inject(AuthCompService)
-  authError = this.service.authError
-  emailError = this.service.emailError
-  form: FormGroup<UserForm> | undefined
+  private readonly service = inject(AuthCompService);
+  authError = this.service.authError;
+  emailError = this.service.emailError;
+  form: FormGroup<UserForm> | undefined;
 
   constructor() {
-    this.initForm()
+    this.initForm();
     effect(() => {
       if (this.mode() === 'Signup') {
-        this.service.resetError()
+        this.service.resetError();
       }
     });
   }
 
   initForm() {
-    this.form = this.service.initForm(this.mode() === 'Login')
+    this.form = this.service.initForm(this.mode() === 'Login');
   }
 
   getErrorName(form: FormGroup) {
@@ -128,7 +123,7 @@ export class AuthComponent {
   }
 
   onSubmit(form: FormGroup) {
-    this.service.onSubmit(form.value, this.mode() === 'Login')
+    this.service.onSubmit(form.value, this.mode() === 'Login');
   }
 }
 
@@ -137,4 +132,3 @@ export interface UserForm {
   password: AbstractControl<string>;
   username: AbstractControl<string>;
 }
-
