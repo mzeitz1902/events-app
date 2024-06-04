@@ -16,7 +16,7 @@ import { MatTooltip } from '@angular/material/tooltip';
       matTooltip="Click to see location on Google Maps"
     >
       <button mat-icon-button>
-        <mat-icon class="!text-sm" color="primary">location_on</mat-icon>
+        <mat-icon class="!text-sm mat-accent">location_on</mat-icon>
       </button>
       <p class="text-sm" matTextSuffix>{{ venue().name }}</p>
     </div>

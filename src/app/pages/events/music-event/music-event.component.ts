@@ -5,43 +5,36 @@ import {
   MatCardActions,
   MatCardContent,
   MatCardHeader,
-  MatCardSubtitle,
   MatCardTitle,
   MatCardXlImage,
 } from '@angular/material/card';
-import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { VenueComponent } from './venue.component';
 import { EventDateComponent } from './event-date.component';
-import { MatSuffix } from '@angular/material/form-field';
-import { MatTooltip } from '@angular/material/tooltip';
 import { EventsService } from '../events.service';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-music-event',
   standalone: true,
   imports: [
     MatCard,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatCardXlImage,
     MatCardHeader,
+    MatCardTitle,
     MatCardContent,
-    MatIconButton,
-    MatIcon,
     VenueComponent,
+    MatCardXlImage,
     EventDateComponent,
     MatCardActions,
-    MatSuffix,
-    MatTooltip,
+    MatIcon,
+    MatButton,
   ],
   template: `
     <mat-card class="max-w-sm flex flex-col gap-2">
       <mat-card-header>
-        <mat-card-title class="!font-bold !text-black">{{
-          event().title
-        }}</mat-card-title>
+        <mat-card-title class="!font-bold">{{ event().title }}</mat-card-title>
       </mat-card-header>
+
       <mat-card-content>
         <img mat-card-xl-image [src]="event().flyerFront" alt="flyer" />
         <app-venue [venue]="venue()" />
@@ -49,9 +42,12 @@ import { EventsService } from '../events.service';
           [startDateTime]="event().startDatetime"
           [endDateTime]="event().endDatetime"
         />
-        <mat-card-actions class="flex justify-end">
-          <button mat-icon-button matTooltip="Add to cart" (click)="onClick()">
-            <mat-icon color="primary">add_circle</mat-icon>
+
+        <mat-card-actions class="flex justify-center">
+          <!--          todo component-->
+          <button mat-stroked-button (click)="onClick()">
+            <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
+            Add to cart
           </button>
         </mat-card-actions>
       </mat-card-content>

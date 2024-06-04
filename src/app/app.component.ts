@@ -8,7 +8,9 @@ import { AppHeaderComponent } from './app-header.component';
   imports: [AppHeaderComponent, RouterOutlet],
   template: `
     <app-header />
-    <router-outlet />
+    <div class="mat-app-background h-screen">
+      <router-outlet />
+    </div>
   `,
 })
 export class AppComponent {}

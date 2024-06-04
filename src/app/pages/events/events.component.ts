@@ -22,10 +22,8 @@ import { MatDivider } from '@angular/material/divider';
         <mat-spinner />
       }
       @for (date of dates(); track date) {
-        <div class="events-container items-center rounded-lg bg-light-grey p-3">
-          <h1
-            class="font-extrabold text-blue-500 !sticky top-[65px] z-10 rounded-lg bg-light-grey"
-          >
+        <div class="events-container items-center rounded-lg bg-primary-30 p-5">
+          <h1 class="font-extrabold primary !sticky top-[65px] z-10 rounded-lg">
             {{ date | date }}
           </h1>
           @for (event of events().get(date); track event) {

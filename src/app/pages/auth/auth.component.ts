@@ -32,7 +32,7 @@ import { AuthCompService } from './auth-comp.service';
           (ngSubmit)="onSubmit(form)"
           class="flex flex-col max-w-fit"
         >
-          <mat-form-field [class.mb-3]="form.get('email')?.invalid">
+          <mat-form-field [class.mb-3]="emailError()">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email" />
             @if (emailError()) {
@@ -40,18 +40,18 @@ import { AuthCompService } from './auth-comp.service';
             }
           </mat-form-field>
 
-          <mat-form-field [class.mb-5]="form.get('password')?.invalid">
+          <mat-form-field [class.mb-5]="passwordError()">
             <mat-label>Password</mat-label>
             <input matInput type="password" formControlName="password" />
-            @if (form.controls['password'].errors) {
-              <mat-error>{{ getErrorPassword(form) }}</mat-error>
+            @if (passwordError()) {
+              <mat-error>{{ passwordError() }}</mat-error>
             }
           </mat-form-field>
 
           @if (mode() === 'Signup') {
             <mat-form-field>
               <mat-label>Name</mat-label>
-              <input matInput type="text" formControlName="username" />
+              <input matInput formControlName="username" />
               @if (form.controls['username'].errors) {
                 <mat-error>{{ getErrorName(form) }}</mat-error>
               }
@@ -62,25 +62,31 @@ import { AuthCompService } from './auth-comp.service';
             @if (authError()) {
               <mat-error>{{ authError() }}</mat-error>
             }
-            <button
-              mat-stroked-button
-              color="primary"
-              [disabled]="this.mode() === 'Signup' || form.invalid"
-            >
-              Log In
-            </button>
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="mode.set('Signup')"
-              [disabled]="this.mode() === 'Signup' && !this.form?.valid"
-            >
-              Sign Up
-            </button>
+            @if (mode() === 'Login') {
+              <button
+                mat-stroked-button
+                color="primary"
+                [disabled]="this.mode() === 'Signup' || form.invalid"
+              >
+                Log In
+              </button>
+              <p class="underline cursor-pointer" (click)="mode.set('Signup')">
+                No account yet?
+              </p>
+            }
+            @if (mode() === 'Signup') {
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="mode.set('Signup')"
+                [disabled]="this.mode() === 'Signup' && !this.form.valid"
+              >
+                Sign Up
+              </button>
+            }
           </div>
         </form>
       }
-      {{ emailError() }}
     </div>
   `,
 })
@@ -90,7 +96,8 @@ export class AuthComponent {
   private readonly service = inject(AuthCompService);
   authError = this.service.authError;
   emailError = this.service.emailError;
-  form: FormGroup<UserForm> | undefined;
+  passwordError = this.service.passwordError;
+  form!: FormGroup<UserForm>;
 
   constructor() {
     this.initForm();
@@ -112,23 +119,13 @@ export class AuthComponent {
     return;
   }
 
-  getErrorPassword(form: FormGroup) {
-    if (form.controls['password'].hasError('required')) {
-      return 'You must enter a value';
-    }
-    if (form.controls['password'].errors?.['minlength']) {
-      return 'You must enter at least 6 characters';
-    }
-    return;
-  }
-
   onSubmit(form: FormGroup) {
     this.service.onSubmit(form.value, this.mode() === 'Login');
   }
 }
 
 export interface UserForm {
-  email: AbstractControl<string>;
-  password: AbstractControl<string>;
-  username: AbstractControl<string>;
+  email: AbstractControl<string | null>;
+  password: AbstractControl<string | null>;
+  username: AbstractControl<string | null>;
 }

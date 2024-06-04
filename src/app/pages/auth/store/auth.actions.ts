@@ -1,6 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { AuthErrorCode } from '@firebase/auth/dist/esm5/src/core/errors';
-import { UserCredentials } from '../../../shared/user-credentials.interface.';
+import { UserCredentials } from '../../../shared/user-credentials.interface';
 
 const AuthActions = createActionGroup({
   source: 'Auth',

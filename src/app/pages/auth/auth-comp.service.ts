@@ -5,11 +5,12 @@ import { AuthService } from '../../services/auth.service';
 import {
   ControlEvent,
   FormBuilder,
+  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
 import { UserForm } from './auth.component';
-import { UserCredentials } from '../../shared/user-credentials.interface.';
+import { UserCredentials } from '../../shared/user-credentials.interface';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { EMPTY } from 'rxjs';
 
@@ -30,33 +31,56 @@ export class AuthCompService {
     signal(undefined);
   passwordEvents: Signal<ControlEvent<string | undefined> | undefined> =
     signal(undefined);
+  usernameEvents: Signal<ControlEvent<string | undefined> | undefined> =
+    signal(undefined);
 
   emailError = computed(() => {
     const errors = this.emailEvents()?.source?.errors as FormError;
     if (errors?.email) return 'Not a valid email address.';
     if (errors?.required) return 'You must enter a value.';
-    return 'Unknown error.';
+    return '';
   });
+
   passwordError = computed(() => {
     const errors = this.passwordEvents()?.source?.errors as FormError;
     if (errors?.required) return 'You must enter a value.';
     if (errors?.minlength) return 'You must enter at least 6 characters.';
-    return 'Unknown error.';
+    return '';
   });
+
   private form: FormGroup<UserForm> | undefined;
 
   initForm(isLoginMode: boolean) {
-    const formObject = {
-      email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.minLength(6)]],
-      username: [null, isLoginMode ? null : Validators.required],
-    };
-    this.form = this.formBuilder.group<UserForm>(
-      formObject as unknown as UserForm,
-    );
-    const emailEvents = this.form.get('email')?.events || EMPTY;
-    this.emailEvents = toSignal(emailEvents);
+    const formObject = this.buildFormObject(isLoginMode);
+    this.form = this.formBuilder.group<UserForm>(formObject);
+    this.buildSignals();
     return this.form;
+  }
+
+  private buildFormObject(isLoginMode: boolean): UserForm {
+    return {
+      email: new FormControl<string>('', [
+        Validators.required,
+        Validators.email,
+      ]),
+      password: new FormControl<string>('', [
+        Validators.required,
+        Validators.minLength(6),
+      ]),
+      username: new FormControl<string>(
+        '',
+        isLoginMode ? null : Validators.required,
+      ),
+    };
+  }
+
+  private buildSignals() {
+    const emailEvents = this.form?.get('email')?.events || EMPTY;
+    const passwordEvents = this.form?.get('password')?.events || EMPTY;
+    const usernameEvents = this.form?.get('username')?.events || EMPTY;
+    this.emailEvents = toSignal(emailEvents);
+    this.passwordEvents = toSignal(passwordEvents);
+    this.usernameEvents = toSignal(usernameEvents);
   }
 
   onSubmit(user: UserCredentials, isLoginMode: boolean) {

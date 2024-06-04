@@ -26,9 +26,10 @@ export const authFeature = createFeature({
   name: authFeatureKey,
   reducer,
   extraSelectors: ({ selectAuthsState }) => ({
-    selectError: createSelector(selectAuthsState, (state) =>
-      state.error?.replace(/auth\//, ''),
-    ),
+    selectError: createSelector(selectAuthsState, (state) => {
+      if (!state.error) return null;
+      return state.error.replace(/auth\//, '');
+    }),
   }),
 });
 

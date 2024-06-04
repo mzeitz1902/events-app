@@ -3,24 +3,17 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-@import 'm3-theme.scss';
+@import 'm3-theme';
+@import 'globals';
 
 @include mat.core();
 
-$angular-material-3-theme: mat.define-theme(
-    (
-      color: (
-        theme-type: dark,
-        primary: mat.$blue-palette,
-        tertiary: mat.$azure-palette,
-      ),
-      density: (
-        scale: -3,
-      ),
-    )
-);
-
 :root {
-  @include mat.all-component-themes($angular-material-3-theme);
+  @include mat.form-field-density(-4);
+  @include mat.icon-button-density(-5);
+  @include mat.all-component-themes($dark-theme);
+  @include globals($dark-theme);
 }
+
+
 

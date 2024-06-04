@@ -32,8 +32,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/globals.scss",
-              "src/m3-theme.scss"
+              "src/globals.scss"
             ],
             "scripts": [],
             "browser": "src/main.ts"
@@ -95,8 +94,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/globals.scss",
-              "src/m3-theme.scss"
+              "src/globals.scss"
             ],
             "scripts": []
           }

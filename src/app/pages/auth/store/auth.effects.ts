@@ -24,25 +24,25 @@ export class AuthEffects {
   register$ = createEffect(() =>
     this.actions$.pipe(
       ofType(signUp),
-      switchMap((action) => {
-        return this.authService.register$(action.user).pipe(
+      switchMap((action) =>
+        this.authService.register$(action.user).pipe(
           map(() => {
             this.router.navigate([PATH_EVENTS]);
             return signUpSuccess();
           }),
-          catchError((err) => {
-            return of(loginOrSignupFail({ error: err }));
-          }),
-        );
-      }),
+          catchError((err: FirebaseError) =>
+            of(loginOrSignupFail({ error: err.code as AuthErrorCode })),
+          ),
+        ),
+      ),
     ),
   );
 
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(logIn),
-      switchMap((action) => {
-        return this.authService.login$(action.user).pipe(
+      switchMap((action) =>
+        this.authService.login$(action.user).pipe(
           map(() => {
             this.router.navigate([PATH_EVENTS]);
             return logInSuccess();
@@ -50,8 +50,8 @@ export class AuthEffects {
           catchError((err: FirebaseError) =>
             of(loginOrSignupFail({ error: err.code as AuthErrorCode })),
           ),
-        );
-      }),
+        ),
+      ),
     ),
   );
 

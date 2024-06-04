@@ -12,7 +12,7 @@ import { logout } from '../pages/auth/store/auth.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { selectError } from '../pages/auth/store/auth.feature';
 import { AuthErrorCode } from '@firebase/auth/dist/esm5/src/core/errors';
-import { UserCredentials } from '../shared/user-credentials.interface.';
+import { UserCredentials } from '../shared/user-credentials.interface';
 
 @Injectable({
   providedIn: 'root',
