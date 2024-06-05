@@ -44,3 +44,5 @@ const { selectIds, selectEntities, selectAll, selectTotal } =
 
 export const selectMusicEvents = selectAll;
 export const selectIsLoading = musicEventsFeature.selectIsLoading;
+export const selectEventById = (id: string) =>
+  createSelector(selectEntities, (entities) => entities[id]);

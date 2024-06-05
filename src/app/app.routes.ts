@@ -13,10 +13,9 @@ export const PATH_AUTH = 'auth';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth', // todo redirect to events when already logged in
+    redirectTo: 'auth',
     pathMatch: 'full',
   },
-  // todo authguard
   {
     path: 'events',
     loadComponent: () =>

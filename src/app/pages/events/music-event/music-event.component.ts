@@ -30,7 +30,7 @@ import { MatButton } from '@angular/material/button';
     MatButton,
   ],
   template: `
-    <mat-card class="max-w-sm flex flex-col gap-2">
+    <mat-card class="w-max flex flex-col gap-2">
       <mat-card-header>
         <mat-card-title class="!font-bold">{{ event().title }}</mat-card-title>
       </mat-card-header>
@@ -44,7 +44,6 @@ import { MatButton } from '@angular/material/button';
         />
 
         <mat-card-actions class="flex justify-center">
-          <!--          todo component-->
           <button mat-stroked-button (click)="onClick()">
             <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
             Add to cart

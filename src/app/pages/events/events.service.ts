@@ -20,8 +20,10 @@ export class EventsService {
     const groupedEvents = new Map<string, MusicEvent[]>();
     if (events) {
       events.forEach((event) => {
-        const date = event.startDatetime.toDate().toString();
-        groupedEvents.set(date, [event]);
+        const date = event.startDatetime.toDate().toDateString();
+        const existingEvents = groupedEvents.get(date) || [];
+        existingEvents.push(event);
+        groupedEvents.set(date, existingEvents);
       });
     }
     return groupedEvents;

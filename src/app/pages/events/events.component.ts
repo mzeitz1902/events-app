@@ -17,18 +17,23 @@ import { MatDivider } from '@angular/material/divider';
     MatDivider,
   ],
   template: `
-    <div class="events-container p-10 items-center">
+    <div class="events-container p-10">
+      <h1 class="text-2xl">Public Events</h1>
       @if (isLoading()) {
         <mat-spinner />
       }
       @for (date of dates(); track date) {
-        <div class="events-container items-center rounded-lg bg-primary-30 p-5">
+        <div class="events-container rounded-lg bg-primary-30 p-5 max-w-min">
           <h1 class="font-extrabold primary !sticky top-[65px] z-10 rounded-lg">
             {{ date | date }}
           </h1>
-          @for (event of events().get(date); track event) {
-            <app-music-event [event]="event" />
-          }
+          <div class="flex gap-3">
+            @for (event of events().get(date); track event.id) {
+              @defer {
+                <app-music-event [event]="event" />
+              }
+            }
+          </div>
         </div>
       }
     </div>
