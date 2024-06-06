@@ -1,0 +1,34 @@
+@use '@angular/material' as mat;
+
+@mixin globals($theme) {
+  @include mat.form-field-density(-4);
+  @include mat.icon-button-density(-5);
+
+  .events-container {
+    @apply flex flex-col gap-3
+  }
+
+  p {
+    @apply text-sm
+  }
+
+  .mdc-notched-outline__notch {
+    border-right: none;
+  }
+
+  .primary {
+    color: mat.get-theme-color($theme, primary);
+  }
+
+  .primary-30 {
+    color: mat.get-theme-color($theme, primary, 30);
+  }
+
+  .bg-primary-30 {
+    background-color: mat.get-theme-color($theme, primary, 30);
+  }
+
+}
+
+
+
